@@ -11,7 +11,11 @@ echo "timezone=${TIME_ZONE}"
 cp /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
 echo "${TIME_ZONE}" > /etc/timezone
 
-echo "$(date) -> start a backup scheduler"
+if [[ -z "${DELAY_TIME}" ]]; then
+    echo "$(date) -> start a backup scheduler"
+else 
+    echo "$(date) -> start one time snapshot"
+fi
 
 while :; do
     DATE=$(date +%Y%m%d-%H%M%S)
@@ -30,6 +34,11 @@ while :; do
     echo "$(date) -> cleanup"
     ls -d1 /srv/var/github-backup/* | head -n -${MAX_BACKUPS} | xargs rm -rf
 
-    echo "$(date) -> sleep for ${DELAY_TIME}"
-    sleep ${DELAY_TIME}
+    if [[ -z "${DELAY_TIME}" ]]; then
+        echo "$(date) -> sleep for ${DELAY_TIME}"
+        sleep ${DELAY_TIME}
+        set -x
+    else
+        break
+    fi
 done
