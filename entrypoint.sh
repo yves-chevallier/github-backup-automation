@@ -18,7 +18,7 @@ else
 fi
 
 while :; do
-    DATE=$(date +%Y-%m-%dT%Hh%Mm)
+    DATE=$(date +%Y-%m-%dT%H%M)
 
     for u in $(echo $USERS | tr "," "\n"); do
         ORGNAME=${u#"org:"}
