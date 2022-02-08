@@ -1,6 +1,7 @@
 #!/bin/bash
 
-set -e
+#set -e
+set -x
 
 TIME_ZONE=${TIME_ZONE:=UTC}
 echo "timezone=${TIME_ZONE}"
@@ -15,7 +16,7 @@ while :; do
 
     for u in $(echo $USERS | tr "," "\n"); do
         echo "$(date) -> execute backup for ${u}, ${DATE}"
-        github-backup $(if [[ $U == org:* ]] ; then echo '--organization'; fi) --token=$GITHUB_TOKEN --all --output-directory=/srv/var/github-backup/${DATE}/${u} --private --gists ${U#"org:"}
+        github-backup ${u#"org:"} $(if [[ $u == org:* ]] ; then echo '--organization'; fi) --token=$GITHUB_TOKEN --all --output-directory=/srv/var/github-backup/${DATE}/${u} --private --gists
 
         echo "$(date) -> compress backup"
         tar -zcvf /srv/var/github-backup/${DATE}/${u}.tar.gz /srv/var/github-backup/${DATE}/${u}
