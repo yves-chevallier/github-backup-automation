@@ -15,7 +15,7 @@ while :; do
 
     for u in $(echo $USERS | tr "," "\n"); do
         echo "$(date) -> execute backup for ${u}, ${DATE}"
-        github-backup ${u} --token=$GITHUB_TOKEN --all --output-directory=/srv/var/github-backup/${DATE}/${u} --private --gists
+        github-backup ${U#"org:"} $(if [[ $U == org:* ]] ; then echo '--organization'; fi) --token=$GITHUB_TOKEN --all --output-directory=/srv/var/github-backup/${DATE}/${u} --private --gists
 
         echo "$(date) -> compress backup"
         tar -zcvf /srv/var/github-backup/${DATE}/${u}.tar.gz /srv/var/github-backup/${DATE}/${u}
