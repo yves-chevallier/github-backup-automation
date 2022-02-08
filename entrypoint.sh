@@ -1,7 +1,9 @@
 #!/bin/bash
 
-#set -e
-set -x
+set -e
+if [[ -z "${VERBOSE}" ]]; then
+    set -x
+fi
 
 TIME_ZONE=${TIME_ZONE:=UTC}
 echo "timezone=${TIME_ZONE}"
