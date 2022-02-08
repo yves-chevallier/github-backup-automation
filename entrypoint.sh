@@ -18,7 +18,7 @@ else
 fi
 
 while :; do
-    DATE=$(date +%Y%m%d-%H%M%S)
+    DATE=$(date +%Y-%m-%dT%Hh%Mm%Ss)
 
     for u in $(echo $USERS | tr "," "\n"); do
         echo "$(date) -> execute backup for ${u}, ${DATE}"
