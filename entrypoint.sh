@@ -18,7 +18,7 @@ else
 fi
 
 while :; do
-    DATE=$(date +%Y-%m-%dT%Hh%Mm%Ss)
+    DATE=$(date +%Y-%m-%dT%Hh%Mm)
 
     for u in $(echo $USERS | tr "," "\n"); do
         echo "$(date) -> execute backup for ${u}, ${DATE}"
@@ -29,11 +29,13 @@ while :; do
             --private \
             --gists
 
-        echo "$(date) -> compress backup"
-        tar -zcvf /srv/var/github-backup/${DATE}/${u}.tar.gz /srv/var/github-backup/${DATE}/${u}
+        if [[ -z "${ARCHIVE}" ]]; then
+            echo "$(date) -> compress backup"
+            tar -zcvf /srv/var/github-backup/${DATE}/${u}.tar.gz /srv/var/github-backup/${DATE}/${u}
 
-        echo "$(date) -> delete un-archived files"
-        rm -rf /srv/var/github-backup/${DATE}/${u}
+            echo "$(date) -> delete un-archived files"
+            rm -rf /srv/var/github-backup/${DATE}/${u}
+        fi
     done
 
     echo "$(date) -> cleanup"
