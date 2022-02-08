@@ -5,11 +5,11 @@ if [[ -z "${VERBOSE}" ]]; then
     set -x
 fi
 
-TIME_ZONE=${TIME_ZONE:=UTC}
-echo "timezone=${TIME_ZONE}"
+TZ=${TZ:=UTC}
+echo "timezone=${TZ}"
 
-cp /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
-echo "${TIME_ZONE}" > /etc/timezone
+cp /usr/share/zoneinfo/${TZ} /etc/localtime
+echo "${TZ}" > /etc/timezone
 
 if [[ -z "${DELAY_TIME}" ]]; then
     echo "$(date) -> start a backup scheduler"
@@ -22,7 +22,12 @@ while :; do
 
     for u in $(echo $USERS | tr "," "\n"); do
         echo "$(date) -> execute backup for ${u}, ${DATE}"
-        github-backup ${u#"org:"} $(if [[ $u == org:* ]] ; then echo '--organization'; fi) --token=$GITHUB_TOKEN --all --output-directory=/srv/var/github-backup/${DATE}/${u} --private --gists
+        github-backup ${u#"org:"} $(if [[ $u == org:* ]] ; then echo '--organization'; fi) \
+            --token=$GITHUB_TOKEN \
+            --all \
+            --output-directory=/srv/var/github-backup/${DATE}/${u} \
+            --private \
+            --gists
 
         echo "$(date) -> compress backup"
         tar -zcvf /srv/var/github-backup/${DATE}/${u}.tar.gz /srv/var/github-backup/${DATE}/${u}

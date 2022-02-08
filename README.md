@@ -10,6 +10,32 @@ I recommend to use this Docker image with Ansible playbook:
 
 It's a better way to create and deploy container to your remote server with no worries and no manual work.
 
+```
+version: "2"
+
+services:
+  github-backup:
+    build: https://github.com/yves-chevallier/github-backup-automation.git
+    container_name: "github-backup"
+    hostname: "github-backup"
+    restart: always
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+    environment:
+      - GID=100
+      - UID=1026
+      - USERS=username org:organization
+      - GITHUB_TOKEN=SECRET
+      - TZ=Europe/Zurich
+    volumes:
+      - /volume1/docker/github:/srv/var/github-backup
+```
+
 ## ⚠️ License
 
 MIT &copy; [Vic Shóstak](https://github.com/koddr).
